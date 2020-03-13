@@ -100,6 +100,11 @@ class SwedishHistoricalDate:
         return (self.year, self.month, self.day)
 
     @property
+    def proleptic_gregorian_tuple(self):
+        dateobj = datetime.fromordinal(self.rd)
+        return (dateobj.year, dateobj.month, dateobj.day)
+
+    @property
     def style(self):
         if self.rd >= GREGORIAN_START:
             return "Gregorian"

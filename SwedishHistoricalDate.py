@@ -32,23 +32,41 @@ import unittest
 GREGORIAN_START = 639965 # Gregorian 1 March 1753
 SWEDISH_STYLE_END = 625000 # Swedish 30 February 1712 / Julian 29 Feb
 SWEDISH_STYLE_START = 620617 # Swedish 1 March 1700 / Julian 29 Feb
-
+MONTH_LEN = [None,31,None,31,30,31,30,31,31,30,31,30,31]
 class SwedishHistoricalDate:
     
     def __init__(self, year, month, day):
         self.year = year
         self.month = month
         self.day = day
-        if (year, month, day) >= (1753, 3, 1):
-            self.rd = datetime(year, month, day).toordinal() # rata die
-        elif (year, month, day) > (1712, 2, 30):
+
+        # set *rate die*
+        if (year, month, day) >= (1753, 3, 1): # Gregorian
+            self.rd = datetime(year, month, day).toordinal()
+        elif (year, month, day) > (1712, 2, 30): # Julian
             assert (year, month, day) < (1753, 2, 18) 
             self.rd = julian2rd(year, month, day)
-        elif (year, month, day) > (1700, 2, 28):
+        elif (year, month, day) > (1700, 2, 28): # Swedish
             assert (year, month, day) != (1700, 2, 29) 
             self.rd = swedish2rd(year, month, day)
-        else:
+        else: # Julian
             self.rd = julian2rd(year, month, day)
+
+        # sanity checks
+        assert year > 0
+        assert 1 <= month <= 12
+        if month == 2:
+            if self.style == "Swedish" and year == 1712:
+                feb_len = 30
+            elif self.style == "Gregorian" and _is_gregorian_leapyear(year):
+                feb_len = 29
+            elif _is_julian_leapyear(year): # Julian or Swedish
+                feb_len = 29
+            else:
+                feb_len = 28
+            assert 1 <= day <= feb_len
+        else:
+            assert 1 <= day <= MONTH_LEN[month]
         return
 
     def __add__(self, N):
@@ -97,14 +115,17 @@ class SwedishHistoricalDate:
                 self.year, self.month, self.day, self.style)
 
 # Julian calendar calculations from:
-# Reingold, Edward M. and Nachum Dershowitz. 2018. Calendrical
-# Calculations: The Ultimate Edition. 4th ed. Cambridge University
-# Press. https://doi.org/10.1017/9781107415058.
+#   Reingold, Edward M. and Nachum Dershowitz. 2018. Calendrical
+#   Calculations: The Ultimate Edition. 4th ed. Cambridge University
+#   Press. https://doi.org/10.1017/9781107415058.
 
 _julian_epoch = -1
 
 def _is_julian_leapyear(year):
     return year % 4 == 0
+
+def _is_gregorian_leapyear(year):
+    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
 
 def _get_style_from_rd(rd):
     if rd >= GREGORIAN_START:

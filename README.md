@@ -12,21 +12,34 @@ From https://en.wikipedia.org/wiki/Swedish_calendar:
 >
 > In 1753, one year later than England and its colonies, Sweden introduced the Gregorian calendar. The leap of 11 days was accomplished in one step, with February 17 being followed by March 1.
 
+The package exports a single class, `SwedishHistoricalDate`. This can be initialised with year-month-day sequences; the object will determine which calendar style was in force at that date
 ```python
-In [1] from SwedishHistoricalDate import SwedishHistoricalDate
+In [1]: from SwedishHistoricalDate import SwedishHistoricalDate
 
-In [2]: SwedishHistoricalDate(1700,2,28)
+In [2]: SwedishHistoricalDate(1700, 2, 28)
 Out[2]: <SwedishHistoricalDate(1700, 2, 28, style=Julian)>
+```
 
-In [3]: SwedishHistoricalDate(1700,2,28) + 1
-Out[3]: <SwedishHistoricalDate(1700, 3, 1, style=Swedish)>
+These date objects allow simple arithmetic and equality operations.
+```python
+In [3]: SwedishHistoricalDate(1712, 2, 29) + 1
+Out[3]: <SwedishHistoricalDate(1712, 2, 30, style=Swedish)>
 
-In [4]: SwedishHistoricalDate(1800, 1,1) - 1
-Out[4]: <SwedishHistoricalDate(1799, 12, 31, style=Gregorian)>
+In [4]: s = SwedishHistoricalDate(1753, 3, 1)
 
-In [5]: SwedishHistoricalDate(1700,2,28) + 1 == SwedishHistoricalDate(1700,3,1)
-Out[5]: True
+In [5]: s
+Out[5]: <SwedishHistoricalDate(1753, 3, 1, style=Gregorian)>
 
-In [6]: SwedishHistoricalDate.fromordinal(625000)
-Out[6]: <SwedishHistoricalDate(1712, 2, 30, style=Swedish)>
+In [6]: s - 1
+Out[6]: <SwedishHistoricalDate(1753, 2, 17, style=Julian)>
+
+In [7]: SwedishHistoricalDate(1700, 2, 28) + 1 == SwedishHistoricalDate(1700,3,1)
+Out[7]: True
+```
+The package doesn't currently support <, >, <=, >=.
+
+The `.toordinal()` and `.fromordinal()` methods use the same *rate die* (‘fixed dates’—elapsed days since the onset of Monday, 1 January in the Gregorian year 1) that the `datetime` package uses:
+```python
+In [8]: SwedishHistoricalDate.fromordinal(625000)
+Out[8]: <SwedishHistoricalDate(1712, 2, 30, style=Swedish)>
 ```

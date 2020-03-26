@@ -56,14 +56,18 @@ class SwedishHistoricalDate:
         assert year > 0
         assert 1 <= month <= 12
         if month == 2:
-            if self.style == "Swedish" and year == 1712:
-                feb_len = 30
+            feb_len = 28 # default
+            if self.style == "Swedish":
+                if year == 1712:
+                    feb_len = 30
+                elif year == 1700:
+                    feb_len = 28
+                elif _is_julian_leapyear(year):
+                    feb_len = 29
             elif self.style == "Gregorian" and _is_gregorian_leapyear(year):
-                feb_len = 29
-            elif _is_julian_leapyear(year): # Julian or Swedish
-                feb_len = 29
-            else:
-                feb_len = 28
+                    feb_len = 29
+            elif self.style == "Julian" and _is_julian_leapyear(year): 
+                    feb_len = 29
             assert 1 <= day <= feb_len
         else:
             assert 1 <= day <= MONTH_LEN[month]

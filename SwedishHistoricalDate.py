@@ -77,7 +77,10 @@ class SwedishHistoricalDate:
         return SwedishHistoricalDate.fromordinal(self.rd + N)
 
     def __sub__(self, N):
-        return SwedishHistoricalDate.fromordinal(self.rd - N)
+        if type(N) == type(self):
+            return self.rd - N.rd
+        else:
+            return SwedishHistoricalDate.fromordinal(self.rd - N)
 
     def __eq__(self, other):
         if isinstance(other, SwedishHistoricalDate):

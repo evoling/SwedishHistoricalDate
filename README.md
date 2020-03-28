@@ -39,7 +39,7 @@ Out[7]: True
 
 Subtracting one date from another returns an integer indicating the number of days difference: 
 
-```
+```python
 In [8]: SwedishHistoricalDate(1753, 3, 1) - SwedishHistoricalDate(1753, 2, 1)
 Out[8]: 17
 ```

@@ -36,10 +36,18 @@ Out[6]: <SwedishHistoricalDate(1753, 2, 17, style=Julian)>
 In [7]: SwedishHistoricalDate(1700, 2, 28) + 1 == SwedishHistoricalDate(1700,3,1)
 Out[7]: True
 ```
-The package doesn't currently support <, >, <=, >=.
+
+Subtracting one date from another returns an integer indicating the number of days difference: 
+
+```
+In [8]: SwedishHistoricalDate(1753, 3, 1) - SwedishHistoricalDate(1753, 2, 1)
+Out[8]: 17
+```
+
+Other mathematical operations with two SwedishHistoricalDate objects are not supported. The package doesn't currently implement <, >, <=, >=.
 
 The `.toordinal()` and `.fromordinal()` methods use the same *rate die* (‘fixed dates’—elapsed days since the onset of Monday, 1 January in the Gregorian year 1) that the `datetime` package uses:
 ```python
-In [8]: SwedishHistoricalDate.fromordinal(625000)
-Out[8]: <SwedishHistoricalDate(1712, 2, 30, style=Swedish)>
+In [9]: SwedishHistoricalDate.fromordinal(625000)
+Out[9]: <SwedishHistoricalDate(1712, 2, 30, style=Swedish)>
 ```
